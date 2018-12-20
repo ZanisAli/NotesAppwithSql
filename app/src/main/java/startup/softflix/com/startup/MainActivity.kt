@@ -23,15 +23,45 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //add dummy data in listNotes
-        listNotes.add(Note(1," meet professor","Create any pattern of your own - tiles, texture, skin, wallpaper, comic effect, website background and more.  Change any artwork of pattern you found into different flavors and call them your own."))
-        listNotes.add(Note(2," meet doctor","Create any pattern of your own - tiles, texture, skin, wallpaper, comic effect, website background and more.  Change any artwork of pattern you found into different flavors and call them your own."))
-        listNotes.add(Note(3," meet friend","Create any pattern of your own - tiles, texture, skin, wallpaper, comic effect, website background and more.  Change any artwork of pattern you found into different flavors and call them your own."))
+        //listNotes.add(Note(1," meet professor","Create any pattern of your own - tiles, texture, skin, wallpaper, comic effect, website background and more.  Change any artwork of pattern you found into different flavors and call them your own."))
+        //listNotes.add(Note(2," meet doctor","Create any pattern of your own - tiles, texture, skin, wallpaper, comic effect, website background and more.  Change any artwork of pattern you found into different flavors and call them your own."))
+        //listNotes.add(Note(3," meet friend","Create any pattern of your own - tiles, texture, skin, wallpaper, comic effect, website background and more.  Change any artwork of pattern you found into different flavors and call them your own."))
 
+
+
+
+        //Load from database, % means anything inside
+        LoadQuery("%")
+
+
+    }
+
+    fun LoadQuery(title:String)
+    {
+        var dbManager=DbManager(this)
+        val selectionArgs= arrayOf(title)
+        val projections= arrayOf("ID","Title", "Description")
+        //first argument is projection so need all colums so put null
+        //title like ? (? is replaced with title argument coming from above)<one ? = first character>
+        val cursor=dbManager.Query(projections, "Title like ?",selectionArgs,"Title" )
+
+        listNotes.clear()//clear the list
+        //moving the cursor to first element
+        if (cursor.moveToFirst())
+        {
+            do {
+                val ID= cursor.getInt(cursor.getColumnIndex("ID"))
+                val Title= cursor.getString(cursor.getColumnIndex("Title"))
+                val Description= cursor.getString(cursor.getColumnIndex("Description"))
+                listNotes.add(Note(ID,Title,Description))
+
+
+            }while (cursor.moveToNext())
+        }
 
         var myNotesAdapter=MyNotesAdapter(listNotes )
         //lvNotes is the id to main activity list view to show tickets there so have to set adapter to that activity
         lvNotes.adapter=myNotesAdapter
-
     }
 
     //this method will be called automatically like oncreate(above) method when activity fire up because of override of above oncreate
@@ -48,6 +78,7 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String): Boolean {
                 Toast.makeText(applicationContext, query, Toast.LENGTH_LONG).show()
                 //todo search database
+                LoadQuery("%"+query+"%")
                 return false
             }
 

@@ -1,9 +1,14 @@
 package startup.softflix.com.startup
 
+import android.app.DownloadManager
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.database.sqlite.SQLiteQueryBuilder
+import android.media.projection.MediaProjection
+import android.text.Selection
 import android.widget.Toast
 
 /**
@@ -68,5 +73,14 @@ class DbManager{
     fun Insert(values:ContentValues):Long{
         val ID= sqlDB!!.insert(dbTable, "",values)
         return ID//if id is 0 means i don't know otherwise means Ok
+    }
+
+    //projection means which colums you want to get, selection means which rows to get, 3rd parameter means sort or not
+    fun Query(projection:Array<String>, selection:String,selectionArgs: Array<String>, sortOrder:String ):Cursor//output is cursor(just like table)
+    {
+        val  qb= SQLiteQueryBuilder()
+        qb.tables=dbTable
+        val cursor=qb.query(sqlDB,projection,selection,selectionArgs,null,null,sortOrder)
+        return cursor
     }
  }
