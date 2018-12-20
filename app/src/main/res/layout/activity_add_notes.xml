@@ -35,12 +35,13 @@
         app:layout_constraintTop_toBottomOf="@+id/etTitle" />
 
     <Button
-        android:background="@drawable/bublue_color"
         android:id="@+id/button2"
         android:layout_width="50pt"
         android:layout_height="30pt"
         android:layout_marginBottom="28dp"
         android:layout_marginEnd="28dp"
+        android:background="@drawable/bublue_color"
+        android:onClick="buAdd"
         android:text="Add Note"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
